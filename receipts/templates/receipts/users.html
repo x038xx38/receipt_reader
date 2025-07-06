@@ -1,0 +1,165 @@
+{% extends "receipts/base.html" %}
+
+{% block title %}Управление пользователями{% endblock %}
+
+{% block content %}
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h1 class="m-0">Управление пользователями</h1>
+				</div>
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><a href="#">Главная</a></li>
+						<li class="breadcrumb-item active">Пользователи</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="card-title">Список пользователей</h3>
+							<div class="card-tools">
+								<div class="input-group input-group-sm">
+									<input type="text" name="table_search" class="form-control float-right" placeholder="Поиск">
+									<div class="input-group-append">
+										<button type="submit" class="btn btn-default">
+											<i class="fas fa-search"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="card-body table-responsive p-0">
+							<table class="table table-hover text-nowrap">
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th>Имя пользователя</th>
+									<th>Email</th>
+									<th>Дата регистрации</th>
+									<th>Статус</th>
+									<th>Действия</th>
+								</tr>
+								</thead>
+								<tbody>
+								{% for user in users %}
+									<tr>
+										<td>{{ user.id }}</td>
+										<td>{{ user.username }}</td>
+										<td>{{ user.email }}</td>
+										<td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
+										<td>
+											{% if user.is_active %}
+												<span class="badge bg-success">Активен</span>
+											{% else %}
+												<span class="badge bg-danger">Заблокирован</span>
+											{% endif %}
+										</td>
+										<td>
+											<div class="btn-group">
+												<a href="#" class="btn btn-sm btn-info" title="Просмотр">
+													<i class="fas fa-eye"></i>
+												</a>
+												<a href="#" class="btn btn-sm btn-primary" title="Редактировать">
+													<i class="fas fa-edit"></i>
+												</a>
+												{% if user.is_active %}
+													<a href="#" class="btn btn-sm btn-danger" title="Заблокировать">
+														<i class="fas fa-lock"></i>
+													</a>
+												{% else %}
+													<a href="#" class="btn btn-sm btn-success" title="Разблокировать">
+														<i class="fas fa-lock-open"></i>
+													</a>
+												{% endif %}
+											</div>
+										</td>
+									</tr>
+								{% empty %}
+									<tr>
+										<td colspan="6" class="text-center">Нет пользователей</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+
+						<div class="card-footer clearfix">
+							<div class="float-left">
+              <span class="text-muted">
+                Показано с {{ users.start_index }} по {{ users.end_index }} из {{ users.paginator.count }} записей
+              </span>
+							</div>
+							<ul class="pagination pagination-sm m-0 float-right">
+								{% if users.has_previous %}
+									<li class="page-item">
+										<a class="page-link" href="?page=1">&laquo;</a>
+									</li>
+									<li class="page-item">
+										<a class="page-link" href="?page={{ users.previous_page_number }}">‹</a>
+									</li>
+								{% endif %}
+
+								{% for num in users.paginator.page_range %}
+									{% if users.number == num %}
+										<li class="page-item active">
+											<span class="page-link">{{ num }}</span>
+										</li>
+									{% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+										<li class="page-item">
+											<a class="page-link" href="?page={{ num }}">{{ num }}</a>
+										</li>
+									{% endif %}
+								{% endfor %}
+
+								{% if users.has_next %}
+									<li class="page-item">
+										<a class="page-link" href="?page={{ users.next_page_number }}">›</a>
+									</li>
+									<li class="page-item">
+										<a class="page-link" href="?page={{ users.paginator.num_pages }}">&raquo;</a>
+									</li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+
+					<div class="card">
+						<div class="card-header">
+							<h3 class="card-title">Добавить нового пользователя</h3>
+						</div>
+						<form method="post" action="">
+							{% csrf_token %}
+							<div class="card-body">
+								<div class="form-group">
+									<label for="username">Имя пользователя</label>
+									<input type="text" class="form-control" id="username" name="username" required>
+								</div>
+								<div class="form-group">
+									<label for="email">Email</label>
+									<input type="email" class="form-control" id="email" name="email" required>
+								</div>
+								<div class="form-group">
+									<label for="password">Пароль</label>
+									<input type="password" class="form-control" id="password" name="password" required>
+								</div>
+							</div>
+							<div class="card-footer">
+								<button type="submit" class="btn btn-primary">Создать пользователя</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

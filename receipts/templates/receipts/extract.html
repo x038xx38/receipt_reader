@@ -1,0 +1,242 @@
+{% extends "receipts/base.html" %}
+
+{% block title %}Банковские выписки{% endblock %}
+
+{% block content %}
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h1 class="m-0">Банковские выписки</h1>
+				</div>
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><a href="#">Главная</a></li>
+						<li class="breadcrumb-item active">Выписки</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="container-fluid">
+			<!-- Карточка загрузки выписки -->
+			<div class="row mb-4">
+				<div class="col">
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">Загрузить новую выписку</h3>
+						</div>
+						<form method="post" enctype="multipart/form-data" id="statement-upload-form">
+							{% csrf_token %}
+							<div class="card-body">
+								<div class="form-group">
+									<label for="statement_file">Выберите файл выписки</label>
+									<div class="input-group">
+										<div class="custom-file">
+											<input type="file" class="custom-file-input" id="statement_file" name="statement_file"
+														 accept=".csv,.xls,.xlsx,.pdf,.txt" lang="ru">
+											<label class="custom-file-label" for="statement_file" data-browse="Выбрать">Поддерживаемые
+												форматы: CSV, XLS, XLSX, PDF</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="bank_name">Банк</label>
+									<select class="form-control" id="bank_name" name="bank_name">
+										<option value="sberbank">Сбербанк</option>
+										<option value="tinkoff">Тинькофф</option>
+										<option value="alfa">Альфа-Банк</option>
+										<option value="vtb">ВТБ</option>
+										<option value="other">Другой</option>
+									</select>
+								</div>
+							</div>
+							<div class="card-footer text-right">
+								<button type="submit" class="btn btn-primary">
+									<i class="fas fa-upload"></i> Загрузить и проанализировать
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<!-- Таблица с историей выписок -->
+			<div class="row">
+				<div class="col">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="card-title">История выписок</h3>
+							<div class="card-tools">
+								<div class="input-group input-group-sm" style="width: 150px;">
+									<input type="text" name="table_search" class="form-control float-right" placeholder="Поиск">
+									<div class="input-group-append">
+										<button type="submit" class="btn btn-default">
+											<i class="fas fa-search"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-body table-responsive p-0">
+							<table class="table table-hover text-nowrap">
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th>Дата загрузки</th>
+									<th>Банк</th>
+									<th>Период</th>
+									<th>Кол-во операций</th>
+									<th>Сумма</th>
+									<th>Статус</th>
+									<th>Действия</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td>1</td>
+									<td>2023-10-15 14:30</td>
+									<td>Сбербанк</td>
+									<td>01.10.2023 - 15.10.2023</td>
+									<td>24</td>
+									<td>125,430.50 ₽</td>
+									<td><span class="badge bg-success">Обработана</span></td>
+									<td>
+										<a href="#" class="btn btn-sm btn-info" title="Просмотр">
+											<i class="fas fa-eye"></i>
+										</a>
+										<a href="#" class="btn btn-sm btn-danger" title="Удалить">
+											<i class="fas fa-trash"></i>
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>2023-10-10 09:15</td>
+									<td>Тинькофф</td>
+									<td>01.09.2023 - 30.09.2023</td>
+									<td>56</td>
+									<td>89,245.20 ₽</td>
+									<td><span class="badge bg-success">Обработана</span></td>
+									<td>
+										<a href="#" class="btn btn-sm btn-info" title="Просмотр">
+											<i class="fas fa-eye"></i>
+										</a>
+										<a href="#" class="btn btn-sm btn-danger" title="Удалить">
+											<i class="fas fa-trash"></i>
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>2023-10-05 16:45</td>
+									<td>Альфа-Банк</td>
+									<td>15.09.2023 - 05.10.2023</td>
+									<td>18</td>
+									<td>42,780.00 ₽</td>
+									<td><span class="badge bg-warning">В обработке</span></td>
+									<td>
+										<a href="#" class="btn btn-sm btn-secondary disabled" title="Просмотр">
+											<i class="fas fa-eye"></i>
+										</a>
+										<a href="#" class="btn btn-sm btn-danger" title="Удалить">
+											<i class="fas fa-trash"></i>
+										</a>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="card-footer clearfix">
+							<ul class="pagination pagination-sm m-0 float-right">
+								<li class="page-item"><a class="page-link" href="#">«</a></li>
+								<li class="page-item active"><a class="page-link" href="#">1</a></li>
+								<li class="page-item"><a class="page-link" href="#">2</a></li>
+								<li class="page-item"><a class="page-link" href="#">3</a></li>
+								<li class="page-item"><a class="page-link" href="#">»</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Графики и аналитика -->
+			<div class="row mt-4">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="card-title">Расходы по категориям</h3>
+						</div>
+						<div class="card-body">
+							<canvas id="categoryChart"
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="card-title">Динамика расходов</h3>
+						</div>
+						<div class="card-body">
+							<canvas id="expensesChart"
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block extra_js %}
+	<script>
+		// Пример инициализации графиков (используется Chart.js)
+		document.addEventListener('DOMContentLoaded', function () {
+			// Круговой график категорий
+			var categoryCtx = document.getElementById('categoryChart').getContext('2d');
+			var categoryChart = new Chart(categoryCtx, {
+				type: 'doughnut',
+				data: {
+					labels: ['Продукты', 'Транспорт', 'Развлечения', 'Коммунальные', 'Другое'],
+					datasets: [{
+						data: [35, 20, 15, 25, 5],
+						backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+					}]
+				},
+				options: {
+					maintainAspectRatio: false,
+				}
+			});
+
+			// Линейный график динамики расходов
+			var expensesCtx = document.getElementById('expensesChart').getContext('2d');
+			var expensesChart = new Chart(expensesCtx, {
+				type: 'line',
+				data: {
+					labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл'],
+					datasets: [{
+						label: 'Расходы',
+						data: [65000, 59000, 80000, 81000, 56000, 75000, 68000],
+						borderColor: '#3C8DBC',
+						backgroundColor: 'rgba(60, 141, 188, 0.1)',
+						fill: true
+					}]
+				},
+				options: {
+					maintainAspectRatio: false,
+					scales: {
+						y: {
+							beginAtZero: false
+						}
+					}
+				}
+			});
+
+			// Обработка выбора файла для отображения имени
+			bsCustomFileInput.init();
+		});
+	</script>
+{% endblock %}

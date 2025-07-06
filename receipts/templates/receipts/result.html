@@ -1,0 +1,128 @@
+{% extends "receipts/base.html" %}
+
+{% block content_title %}Результат распознавания чека{% endblock %}
+
+{% block content %}
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h1 class="m-0">Результат распознавания чека</h1>
+				</div>
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><a href="{% url 'receipts:upload_receipt' %}">Главная</a></li>
+						<li class="breadcrumb-item active">Результат</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="container-fluid">
+			<!-- Статус и информация о технологии -->
+			<div class="row">
+				<div class="col-12">
+					<div class="callout
+                    {% if receipt.status == 'success' %}callout-success
+                    {% elif receipt.status == 'error' %}callout-danger
+                    {% else %}callout-info{% endif %}">
+						<h5>
+							<i class="fas
+                            {% if receipt.status == 'success' %}fa-check-circle
+                            {% elif receipt.status == 'error' %}fa-exclamation-circle
+                            {% else %}fa-info-circle{% endif %}"></i>
+							Статус: {{ receipt.get_status_display }}
+						</h5>
+						<p>
+							<strong>Технология распознавания:</strong> {{ receipt.get_ocr_technology_display }}<br>
+							<strong>Дата обработки:</strong> {{ receipt.created_at|date:"d.m.Y H:i" }}
+							{% if receipt.error_message %}
+								<br><strong>Ошибка:</strong> {{ receipt.error_message }}
+							{% endif %}
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<!-- Оригинальное изображение -->
+				<div class="col-md-6">
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">Оригинальное изображение</h3>
+						</div>
+						<div class="card-body">
+							<img src="{{ receipt.original_image.url }}" class="img-fluid rounded" alt="Оригинальный чек">
+						</div>
+					</div>
+				</div>
+
+				<!-- Обработанное изображение -->
+				<div class="col-md-6">
+					<div class="card
+                    {% if receipt.processed_image %}card-success{% else %}card-secondary{% endif %}">
+						<div class="card-header">
+							<h3 class="card-title">Обработанное изображение</h3>
+						</div>
+						<div class="card-body">
+							{% if receipt.processed_image %}
+								<img src="{{ receipt.processed_image.url }}" class="img-fluid rounded" alt="Обработанный чек">
+							{% else %}
+								<div class="alert alert-warning">Изображение не было обработано</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Распознанный текст -->
+			<div class="row mt-3">
+				<div class="col-12">
+					<div class="card
+                    {% if receipt.status == 'success' %}card-info
+                    {% elif receipt.status == 'error' %}card-danger
+                    {% else %}card-default{% endif %}">
+						<div class="card-header">
+							<h3 class="card-title">Распознанный текст</h3>
+							{% if receipt.status == 'success' %}
+								<div class="card-tools">
+									<button type="button" class="btn btn-tool" data-card-widget="maximize">
+										<i class="fas fa-expand"></i>
+									</button>
+								</div>
+							{% endif %}
+						</div>
+						<div class="card-body">
+							{% if receipt.extracted_text %}
+								<pre class="bg-light p-3 border rounded"
+										 style="white-space: pre-wrap;">{{ receipt.extracted_text }}</pre>
+							{% else %}
+								<div class="alert alert-warning">Текст не был распознан</div>
+							{% endif %}
+						</div>
+						{% if receipt.status == 'success' %}
+							<div class="card-footer">
+								<button class="btn btn-default btn-sm" onclick="copyToClipboard()">
+									<i class="fas fa-copy"></i> Копировать текст
+								</button>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function copyToClipboard() {
+			const text = document.querySelector('pre').innerText;
+			navigator.clipboard.writeText(text).then(() => {
+				alert('Текст успешно скопирован в буфер обмена');
+			}).catch(err => {
+				console.error('Ошибка копирования: ', err);
+			});
+		}
+	</script>
+{% endblock %}

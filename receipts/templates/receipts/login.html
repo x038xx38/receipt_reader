@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Сканер чеков | Авторизация</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'receipts/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'receipts/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'receipts/css/adminlte.min.css' %}">
+
+	<style>
+		/* Дополнительные стили */
+    .card {
+        width: 100%;
+        max-width: 400px;  /* Фиксированная ширина карточки */
+        margin: 0 auto;
+    }
+
+    /* Стили для полей ввода */
+    #id_username, #id_password {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+     }
+
+    /* Стили для иконок */
+    .input-group-text {
+        background-color: #f8f9fa;
+    }
+
+    /* Увеличение размера заголовка */
+    .card-header h1 {
+        font-size: 2rem;
+    }
+
+    /* Стиль для текста "Войдите..." */
+    .login-box-msg {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    /* Стиль для кнопки */
+    .btn-primary {
+        padding: 8px;
+    }
+	</style>
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <!-- /.login-logo -->
+	<div class="card card-outline card-primary">
+		<div class="card-header text-center">
+			<h1 class="m-0"><b>Сканер</b> чеков</h1>  <!-- Добавлен класс h1 и m-0 -->
+		</div>
+		<div class="card-body p-4">  <!-- Добавлен padding -->
+			<h3 class="login-box-msg mb-4">Войдите, чтобы начать работу</h3>  <!-- Увеличен размер и добавлен margin-bottom -->
+
+			{% if form.errors %}
+					<div class="alert alert-danger">
+							Неверное имя пользователя или пароль. Попробуйте снова.
+					</div>
+			{% endif %}
+
+			<form method="post">
+					{% csrf_token %}
+					<div class="form-group mb-3">  <!-- Добавлен form-group -->
+							<div class="input-group flex-nowrap">
+									{{ form.username }}
+									<div class="input-group-append">
+											<div class="input-group-text">
+													<span class="fas fa-user"></span>
+											</div>
+									</div>
+							</div>
+					</div>
+					<div class="form-group mb-4">  <!-- Добавлен form-group и увеличен margin-bottom -->
+							<div class="input-group flex-nowrap">
+									{{ form.password }}
+									<div class="input-group-append">
+											<div class="input-group-text">
+													<span class="fas fa-lock"></span>
+											</div>
+									</div>
+							</div>
+					</div>
+					<div class="row mt-5">
+							<div class="col-8">
+									<div class="icheck-primary">
+											<input type="checkbox" id="remember">
+											<label for="remember">
+													Запомнить меня
+											</label>
+									</div>
+							</div>
+							<div class="col-4">
+									<button type="submit" class="btn btn-primary btn-block">Войти</button>
+							</div>
+					</div>
+			</form>
+		</div>
+	</div>
+  <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="{% static 'receipts/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'receipts/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'atk_admin/js/adminlte.min.js' %}"></script>
+</body>
+</html>
